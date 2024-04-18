@@ -131,7 +131,7 @@ export class TestRealizadosService {
         if (test.puntaje >= 0 && test.puntaje <= 7) {
             return {message: "No se recomienda hacer el test completo ", risk: 1};
         } else if (test.puntaje >= 8) {
-            return {message: `Se recomienda hacer el test completo de ${test.test_id['nombre_test']}`, risk: 2};
+            return {message: `Se recomienda hacer el test completo de ${test.nombre_test}`, risk: 2};
         }
     }
 
