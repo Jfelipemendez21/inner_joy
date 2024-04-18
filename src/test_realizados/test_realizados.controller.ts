@@ -9,14 +9,15 @@ export class TestRealizadosController {
     ){}
 
     @Get()
-    async getResultTest(@Headers("Authorization") authorization: string){
+    async getAllResultsTests(@Headers("Authorization") authorization: string){
         if(!authorization){
             throw new UnauthorizedException("No se ha enviado el token de autorización")
         }
         const token= authorization.split(" ")[1]
-        const results= await this.testRealizadosService.findRetults(token)
-        return {results: results ? results : []}
+        const results= await this.testRealizadosService.findAllRetults(token)
+        return results
     }
+    
 
     @Post()
     async createResultTest(@Headers("Authorization") authorization: string, @Body() crearTestDto: CrearTestDto){
