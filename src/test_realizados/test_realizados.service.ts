@@ -79,38 +79,36 @@ export class TestRealizadosService {
             if(!decoded){
                 throw new UnauthorizedException("Ha ocurrido un error al intentar validar el token")
             }
+            console.log("Id del usuario autenticado"+decoded['user'].id)
+            const results = await this.testRealizadosRepo.query(`
+            SELECT tr.*, t.nombre_test FROM inner_joy.test_realizados tr INNER JOIN inner_joy.test t ON tr.usuario_id = ${decoded['user'].id} AND tr.test_id = t.id;
+            `)
+            
+            // find(
 
-            const results = await this.testRealizadosRepo.find(
-                {
-                    where:{
-                        usuario_id: decoded['user'].id
-                    },
-                    order: {
-                        fecha_realizacion: "DESC"
-                    },
-                    relations: ['test_id', 'usuario_id']
-                    }
-            )
+            //     {
+            //         where:{
+            //             usuario_id: decoded['user'].id
+            //         },
+            //         order: {
+            //             fecha_realizacion: "DESC"
+            //         },
+            //         relations: ['test_id', 'usuario_id']
+            //         }
+            // )
 
             if(!results){
                 throw new NotFoundException(`No se encontraron resultados con el usuario ${decoded['user'].username}`)
             }
-
+            console.log('====================================');
+            console.log(results);
+            console.log('====================================');
             return Promise.all(results.map(async(test)=>{
                 return {
-                    id_test: test.id,
-                    puntaje: test.puntaje,
-                    fecha_realizacion: test.fecha_realizacion,
-                    usuario: 
-                        {
-                            id: test.usuario_id['id'], 
-                            nombre: test.usuario_id['nombre'], 
-                            username: test.usuario_id['username'], 
-                            email:test.usuario_id['email']
-                        },
-                    test: test.test_id,
-                    recommendation:  await test.test_id["tipo_test_id"] === 2 ? await this.obtenerMensajeTestAvanzados(test) : await this.obtenerMensajeTestPrincipales(test)
-                }
+                    ...test,
+                    recommendation:  await test.tipo_test_id === 2 ? await this.obtenerMensajeTestAvanzados(test) : await this.obtenerMensajeTestPrincipales(test)
+                    }
+                
             }))
             
         }catch(err){

@@ -19,7 +19,7 @@ import { UsuarioEntity } from './usuario/entitys/usuario.entity';
         password: '',
         database: 'inner_joy',
         entities: [TestEntity, TestRealizadosEntity, UsuarioEntity], // Añade tus entidades aquí
-        synchronize: false, // Cambia esto a false en producción
+        synchronize: true, // Cambia esto a false en producción
       }),
     TestModule, 
     UsuarioModule, 
