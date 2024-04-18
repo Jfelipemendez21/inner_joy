@@ -81,28 +81,13 @@ export class TestRealizadosService {
             }
             console.log("Id del usuario autenticado"+decoded['user'].id)
             const results = await this.testRealizadosRepo.query(`
-            SELECT tr.*, t.nombre_test FROM inner_joy.test_realizados tr INNER JOIN inner_joy.test t ON tr.usuario_id = ${decoded['user'].id} AND tr.test_id = t.id;
+            SELECT tr.*, t.nombre_test, t.tipo_test_id FROM inner_joy.test_realizados tr INNER JOIN inner_joy.test t ON tr.usuario_id = ${decoded['user'].id} AND tr.test_id = t.id;
             `)
             
-            // find(
-
-            //     {
-            //         where:{
-            //             usuario_id: decoded['user'].id
-            //         },
-            //         order: {
-            //             fecha_realizacion: "DESC"
-            //         },
-            //         relations: ['test_id', 'usuario_id']
-            //         }
-            // )
 
             if(!results){
                 throw new NotFoundException(`No se encontraron resultados con el usuario ${decoded['user'].username}`)
             }
-            console.log('====================================');
-            console.log(results);
-            console.log('====================================');
             return Promise.all(results.map(async(test)=>{
                 return {
                     ...test,
