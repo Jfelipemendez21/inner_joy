@@ -66,7 +66,7 @@ export class TestRealizadosService {
                         email:test.usuario_id['email']
                     },
                 test: test.test_id,
-                recommendation:  await test.test_id["tipo_test_id"] === 2 ? await this.obtenerMensajeTestAvanzados(test) : await this.obtenerMensajeTestPrincipales(test)
+                recommendation:  await test.test_id["tipo_test_id"] === 2 ? await this.obtenerMensajeTestAvanzados(test) : await this.obtenerMensajeTestPrincipal(test)
             }
         }catch(err){
             throw new ConflictException("Ha ocurrido un error " +err)
@@ -116,7 +116,17 @@ export class TestRealizadosService {
         if (test.puntaje >= 0 && test.puntaje <= 7) {
             return {message: "No se recomienda hacer el test completo ", risk: 1};
         } else if (test.puntaje >= 8) {
+            console.log(test)
             return {message: `Se recomienda hacer el test completo de ${test.nombre_test}`, risk: 2};
+        }
+    }
+
+    async obtenerMensajeTestPrincipal(test: Record<string, any>){
+        if (test.puntaje >= 0 && test.puntaje <= 7) {
+            return {message: "No se recomienda hacer el test completo ", risk: 1};
+        } else if (test.puntaje >= 8) {
+            console.log(test)
+            return {message: `Se recomienda hacer el test completo de ${test.test_id['nombre_test']}`, risk: 2};
         }
     }
 
